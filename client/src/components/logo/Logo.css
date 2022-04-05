@@ -1,0 +1,9 @@
+.my-txt-blue {
+    color: rgb(25, 83, 241);
+}
+.my-txt-orange{
+    color: rgb(250, 144, 44);
+}
+#my-hidden{
+    display: none;
+}

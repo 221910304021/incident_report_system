@@ -1,0 +1,11 @@
+.regs-form-container{
+    min-height: 100vh;
+}
+
+.regs-form-card{
+    max-width: 500px;
+}
+
+#medyo-bold{
+    font-weight: 400;
+}

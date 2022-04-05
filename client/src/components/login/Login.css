@@ -1,0 +1,10 @@
+.login-card{
+    background-color: white;
+}   
+.submit-btn{
+    background-color: rgb(17, 131, 61);
+    color: white;
+    border: none;
+    border-radius: 2.5px;
+
+}
