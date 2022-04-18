@@ -1,9 +1,10 @@
 import React,  {useRef, useState} from "react";
-import { Form, Button, Card, Alert } from 'react-bootstrap';
+import { Form, Button, Card, Alert, Navbar} from 'react-bootstrap';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../contexts/AuthContext';
 import './Login.css'
-import Logo from "../logo/Logo";
+import Axios from 'axios';
+import Swal from "sweetalert2";
 
 export default function Login() {
     const emailRef = useRef();
@@ -17,10 +18,39 @@ export default function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const [show, setShow] = useState(true)
+
+
     const {login} = useAuth();
 
     const navigate = useNavigate();
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+
+      const fire = () => {
+        return(
+            Toast.fire({
+                icon: 'success',
+                title: 'Login successfully'
+              }).then(() => {
+                  window.location.href = '/'
+                  setLoading(false)
+              })
+        )
+      }
+
+    const emailregex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const unamaregex = /^[a-zA-Z0-9@#\$\^\&\)\(+._-]+$/g
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -41,22 +71,42 @@ export default function Login() {
             setPassError('')
         }
 
-        try {
-            setError('');
-            setLoading(true)
-            await login(emailRef.current.value, passRef.current.value)
-            navigate('/')
-        } catch (error) {
-            setError('Aunthentication failed. Incorrect email or password.')
-
+        if(emailregex.test(emailRef.current.value) === false){
+            if(unamaregex.test(emailRef.current.value) === false){
+                setError('Aunthentication failed. Incorrect email or password.')
+                console.log('regexuname');
+            }else {
+                Axios.post('http://localhost:3001/check-username', {
+                username: emailRef.current.value,
+                }).then(async (response) => {
+                    try {
+                        setError('');
+                        setLoading(true)
+                        login(response.data[0].email, passRef.current.value)
+                        fire()
+                    } catch (error) {
+                        setLoading(false)
+                        setError('Aunthentication failed. Incorrect email or password.')
+            
+                    }
+                })
+            }
+        } else{
+            try {
+                setError('');
+                setLoading(true)
+                login(emailRef.current.value, passRef.current.value)
+                fire()
+            } catch (error) {
+                setLoading(false)
+                setError('Aunthentication failed. Incorrect email or password.')
+    
+            }
         }
-
-        setLoading(false)
     }
 
     return(
         <>
-            <Logo/>
             <div className='d-flex mt-5 justify-content-center regs-form-container'>
                 <div className='regs-form-card w-100'>
                     <Card className='shadow-sm'>
@@ -66,7 +116,7 @@ export default function Login() {
                             {error && <Alert variant='danger'>{error}</Alert>}
                             <Form noValidate onSubmit={handleSubmit}>
                                 <Form.Group className='mb-2' id='email' controlId='formBasicEmail'>
-                                    <Form.Label>Email*</Form.Label>
+                                    <Form.Label>Email or Username*</Form.Label>
                                     <Form.Control type='email' ref={emailRef} required isInvalid={emailValidity}></Form.Control>
                                     <Form.Control.Feedback type="invalid">
                                         {emailError}

@@ -1,34 +1,79 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState} from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
 import './Register.css'
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../logo/Logo';
+import Axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default function Register() {
+    const uNameRef = useRef()
     const emailRef = useRef();
     const passRef = useRef();
     const conPassRef = useRef();
 
+    const [show, setShow] = useState(true)
+
     const [emailError, setEmailError] = useState('');
     const [passError, setPassError] = useState('');
     const [conpassError, setconPassError] = useState('');
+    const [unameErr, setunameErr] = useState('');
+    const [unameUsed, setunameUsed] = useState(false);
+
+
 
     const [emailValidity, setemailValidity] = useState(false);
+    const [unameValidiity, setunameValidity] = useState(false);
     const [passValidity, setPassValidity] = useState(false);
     const [conPassValidity, setconPassValidity] = useState(false);
 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const {sign_up} = useAuth();
+    const {sign_up, logout} = useAuth();
 
     const navigate = useNavigate();
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      })
+
+      const fire = () => {
+        return(
+            Toast.fire({
+                icon: 'success',
+                title: 'Registered successfully'
+              }).then(() => {
+                setLoading(false)
+                window.location.href = '/login'
+              })
+        )
+      }
 
     async function handleSubmit(e) {
         e.preventDefault()
 
-        const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const emailregex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+        if(uNameRef.current.value.length < 1){
+            setunameValidity(true)
+            return setunameErr('Username is required')
+        } else {
+            setunameValidity(false)
+            setunameErr('')
+        }
+         if (unameUsed) {
+            setunameValidity(true)
+            return setunameErr('Username is already used')
+         }
 
         if(emailRef.current.value.length < 1){
             setemailValidity(true)
@@ -38,7 +83,7 @@ export default function Register() {
             setEmailError('')
         }
 
-        if(regex.test(emailRef.current.value) === false){
+        if(emailregex.test(emailRef.current.value) === false){
             setemailValidity(true)
             return setEmailError('Invalid Email address')
         }else {
@@ -58,8 +103,8 @@ export default function Register() {
             setconPassValidity(true)
             return setconPassError('Confirmation password is required')
         }else {
-            setPassValidity(false)
-            setPassError('')
+            setconPassValidity(false)
+            setconPassError('')
         }
 
         if (passRef.current.value !== conPassRef.current.value){
@@ -72,18 +117,30 @@ export default function Register() {
         try {
             setError('');
             setLoading(true)
-             await sign_up(emailRef.current.value, passRef.current.value)
-             navigate('/login')
+            await sign_up(emailRef.current.value, passRef.current.value)
+             Axios.post('http://localhost:3001/save-username', {
+                username: uNameRef.current.value,
+                email: emailRef.current.value,
+            }).then(async (response) => {
+                if (response.status === 200){
+                    console.log(response);
+                    try {
+                        logout()
+                        fire()
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            })
         } catch (error) {
             if (error.code.includes('auth/email-already-in-use')) {
                 setError('Email is already used. Try to login')
             } else {
                 setError('Error Occured. Unable to create account')
-
             }
+            setLoading(false)
+
         }
-        
-        setLoading(false)
         setconPassValidity(false)
 
     }
@@ -98,9 +155,42 @@ export default function Register() {
        }
     }
 
+    const onUnameChange = (e) => {
+        const unamaregex = /^[a-zA-Z0-9@#\$\^\&\)\(+._-]+$/g
+
+        if (unamaregex.test(uNameRef.current.value) === false && uNameRef.current.value.length > 0){
+            setunameValidity(true)
+            return setunameErr('Special characters is not allowed ( ? % & / < )')
+        }
+
+        if (uNameRef.current.value.length <= 6) {
+            setunameValidity(true)
+            return setunameErr('Username must be more than 6 characters')
+        } else{
+            setunameErr('')
+            setunameValidity(false)
+        }
+        
+        
+        Axios.post('http://localhost:3001/check-username', {
+                username: e.target.value,
+            }).then(async (response) => {
+                console.log(response);
+               if (response.data.length > 0) {
+                setunameValidity(true)
+                setunameUsed(true)
+                return setunameErr('Username is already used')
+               } else{
+                    setunameUsed(false)
+
+               }
+            })
+         
+    }
+
   return (
       <>
-        <Logo/>
+
         <div className='d-flex mt-5 justify-content-center regs-form-container'>
             <div className='regs-form-card w-100'>
                 <Card className='shadow-sm'>
@@ -109,6 +199,13 @@ export default function Register() {
                         <hr className='mt-2 mb-3'/>
                         {error && <Alert variant='danger'>{error}</Alert>}
                         <Form noValidate onSubmit={handleSubmit}>
+                            <Form.Group className='mb-2' id='text' controlId='formBasicUname'>
+                                <Form.Label>Username*</Form.Label>
+                                <Form.Control type='email' ref={uNameRef} required isInvalid={unameValidiity} onChange={onUnameChange}></Form.Control>
+                                <Form.Control.Feedback type="invalid">
+                                    {unameErr}
+                                </Form.Control.Feedback>
+                            </Form.Group>
                             <Form.Group className='mb-2' id='email' controlId='formBasicEmail'>
                                 <Form.Label>Email*</Form.Label>
                                 <Form.Control type='email' ref={emailRef} required isInvalid={emailValidity}></Form.Control>
@@ -123,7 +220,7 @@ export default function Register() {
                                     {passError}
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group id='conPass' controlId="formBasicPassword">
+                            <Form.Group id='conPass' controlId="formBasicConPassword">
                                 <Form.Label>Password Confirmation*</Form.Label>
                                 <Form.Control type='password' ref={conPassRef} required isInvalid={conPassValidity}></Form.Control>
                                 <Form.Control.Feedback type='invalid'>

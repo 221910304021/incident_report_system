@@ -1,0 +1,37 @@
+
+
+.my-descrip{
+    max-height: 200px;
+    overflow: auto;
+    margin: 10;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 5px;
+    padding: 5px;
+}
+.my-descrip-lg{
+    overflow: auto;
+    margin: 10;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 5px;
+    padding: 5px;
+}
+.modal-body{
+    max-height: 740px!important;
+    overflow: auto!important;
+}
+.my-descrip img{
+    width: 30px;
+}
+
+.active-report {
+    background-color: rgb(73, 190, 73);
+}
+.closed-report{
+    background-color: rgb(159, 177, 159);
+
+}
+
+textarea.form-control{
+    resize: none;
+    overflow: hidden;
+}

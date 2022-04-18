@@ -29,6 +29,11 @@ const StudentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    photoUrl: {
+        type: String,
+        required: true,
+    },
+    
 
 });
 

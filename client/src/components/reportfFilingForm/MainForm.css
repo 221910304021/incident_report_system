@@ -1,0 +1,54 @@
+#my-hidden{
+    display: none;
+}
+
+#my-between{
+    justify-content: space-between;
+}
+
+#my-start {
+    justify-content: flex-start;
+}
+
+#my-end{
+    justify-content: flex-end;
+}
+
+.editor-height{
+    min-height: 220px;
+}
+div.rdw-image-modal-upload-option{
+    word-break: break-word;
+}
+
+div.rdw-editor-main{
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 5px;
+    padding: 5px;
+    min-height: 200px;
+
+}
+
+.other-input input {
+    width: 30%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid black;
+}
+
+#error-border {
+    border: 1.5px solid rgb(192, 35, 35);
+}
+
+@media only screen and (max-width: 760px) {
+    .my-tablist {
+      font-size: small;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .my-tablist {
+      font-size: x-small;
+    }
+}

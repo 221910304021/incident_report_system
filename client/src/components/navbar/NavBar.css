@@ -1,0 +1,43 @@
+.fix-height{
+    height: 100vh;
+}
+.my-txt-blue {
+    color: rgb(25, 83, 241);
+}
+.my-txt-orange{
+    color: rgb(250, 144, 44);
+}
+#my-hidden-account{
+    display: none;
+}
+.pro-sidebar-header, .pro-sidebar-content, .pro-sidebar-footer {
+    background-color: #1e85e6;
+    color: white!important;
+}
+.pro-menu .toggle-btn svg{
+    width: 2em;
+    height: 2em;
+    color: white;
+
+}
+.pro-menu-item{
+    background-color: none;
+
+}
+.pro-icon-wrapper{
+    background-color: transparent!important;
+}
+
+.pro-icon-wrapper .pro-icon {
+    color: white;
+}
+.pro-icon svg {
+    width: 2em;
+    height: 2em;
+}
+
+.borger{
+    background-color: #1e85e6;
+    color:white;
+    border-radius: 5px;
+}
