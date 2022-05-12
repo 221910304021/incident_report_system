@@ -1,0 +1,148 @@
+.my-col{
+    min-height: 560px;
+}
+
+.my-descrip-lg{
+    overflow: auto;
+    margin: 10;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 5px;
+    padding: 5px;
+}
+.modal{
+    overflow: hidden!important;
+}
+.modal-body{
+    max-height: 510px!important;
+    overflow: auto!important;
+}
+
+
+.modal-editor .my-reply{
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 5px;
+    padding: 5px;
+    height: max-content;
+    overflow: auto;
+}
+
+.modal-editor .my-reply textarea{
+    height: max-content;
+    border: none;
+    resize: none;
+}
+
+.imageContainer{
+    display: flex;
+    position: absolute;
+    top: -15vh;
+    left: 1px;
+    width: fit-content;
+    max-width: 100%;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    padding: 12px;
+}
+
+.images{
+    display: flex;
+    overflow-x: auto;
+}
+
+.editor-height{
+    min-height: 220px;
+}
+div.rdw-image-modal-upload-option{
+    word-break: break-word;
+}
+
+div.rdw-editor-main{
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 5px;
+    padding: 5px;
+    min-height: 170px;
+}
+
+.my-body-reports{
+    height: 72vh;
+    overflow: auto;
+}
+
+.my-descrip{
+    max-height: 200px;
+    overflow: auto;
+    margin: 10;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.active-report {
+    background-color: rgb(65, 172, 65);
+}
+.closed-report{
+    background-color: rgb(151, 165, 151);
+
+}
+.pending-report {
+    background-color: #fd7e14;
+}
+.on-process{
+    background-color: #0084ff;
+}
+
+
+.my-report{
+    max-height: 350px;
+    overflow: auto;
+}
+
+.sticky-top{
+    z-index: 1!important;
+}
+
+.reply-head {
+    background-color: whitesmoke;
+    position: relative;
+}
+
+.reply-body {
+    position: relative;
+    background-color: #d2e9ff;
+}
+
+.position-my{
+    position: sticky;
+    left: 45%;
+    width: max-content;
+    bottom: 0;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 1023px) {
+    .my-body-reports{
+        height: 65vh;
+        overflow: auto;
+    }
+}
+
+
+
+@media only screen and (max-width: 760px) {
+    .my-tablist {
+      font-size: medium;
+    }
+    
+    .dropdown-menu.show{
+        max-width: 350px;
+    }
+    
+    
+}
+
+@media only screen and (max-width: 500px) {
+    .my-tablist {
+      font-size: small;
+    }
+    
+}

@@ -10,12 +10,11 @@ export default function LogOutModal(props) {
     }
 
     async function handleLogout() {
-        try {
-            logout()
-            window.location.replace('/login');
-        } catch (error) {
-            console.log(error);
-        }
+      logout().then((result) => {
+        window.location.replace('/login');
+      }).catch((err) => {
+        console.log(err);
+      });
     }
 
     return (

@@ -24,25 +24,35 @@ export default function Dashboard() {
             authID: currentUser.uid,
             }).then((response) => {
                 if (response.data.length > 0){
-                    Axios.post('http://localhost:3001/get-reports', {
-                        student_id: currentUser.uid,
-                    }).then((response) => {
-                        if (response.data.length > 0){
-                            setHasReports(true)
-                            setReports(response.data)
-                        }
-                    })
+                   
                 } else {
-                    console.log( 'else');
                     setAccountShow(true)
                 }
             })
         
-    }, [currentUser])
+    }, [])
 
-    if(currentUser===null){
-        return window.location.replace('/login')
-    }
+    useEffect(() => {
+        if (modalShow) {
+            if (oneReport.isActive && oneReport.replies.length > 0) {
+                Axios.post('http://localhost:3001/get-report', {
+                    report_id: oneReport._id,
+                    }).then((response) => {
+                        setOneReport(response.data[0])
+                })
+            }
+           
+        } else {
+            Axios.post('http://localhost:3001/get-reports', {
+                student_id: currentUser.uid,
+            }).then((response) => {
+                if (response.data.length > 0){
+                    setHasReports(true)
+                    setReports(response.data)
+                }
+            })
+        }
+    })
 
     const viewReport = (report_id) => {
         Axios.post('http://localhost:3001/get-report', {
@@ -61,7 +71,6 @@ export default function Dashboard() {
                 Axios.post('http://localhost:3001/get-reports', {
                 student_id: currentUser.uid,
                 }).then((response) => {
-                    console.log(response);
                     if (response.data.length > 0){
                         setHasReports(true)
                         setReports(response.data)
@@ -82,6 +91,27 @@ export default function Dashboard() {
             })
         
     }
+
+    const disbale_reply_btn = (report) => {
+        if (!report.isActive) {
+            return true
+        }
+
+        if (report.replies.length > 0) {
+            return false
+        }
+        
+        return !report.isEvalueated
+      }
+    
+      const disbale_close_btn = (report) => {
+          if (!report.isEvalueated) {
+            return true
+          }
+    
+          return !report.isActive
+      }
+
     const addCards = reports.map((report, index) => {
        return(
         <Col lg={4} md={6} key={index}>
@@ -94,18 +124,21 @@ export default function Dashboard() {
                         {report.date} | {report.time}<br/>
 
                     </Card.Text>
-                    {report.isActive ?  <div className='my-descrip active-report'/> :
-                         <div className='my-descrip closed-report'/> }
+                    {
+                        !report.isActive 
+                        ?  <div className='my-descrip closed-report' title='Closed'/> 
+                        :  report.isEvalueated 
+                         ? <div className='my-descrip active-report' title={`Evaluated by ${report.evaluation.evaluator_info.first_name} ${report.evaluation.evaluator_info.last_name}`}/>
+                         : Object.keys(report.evaluation).includes('evaluator_info') || Object.keys(report.evaluation).length === 1
+                         ? <div className='my-descrip on-process' title={`On Process with ${report.evaluation.evaluator_info.first_name} ${report.evaluation.evaluator_info.last_name}` }/> 
+                         : <div className='my-descrip pending-report' title='Pending'/>
+                    }
                    
                 </Card.Body>
                 <ButtonGroup aria-label="">
-                    <Button variant="light" onClick={()=>{
-                        closeReport(report._id)
-                    }}>Close</Button>
-                    <Button variant="light" onClick={()=>{
-                        viewReport(report._id)
-                    }}>View</Button>
-                    <Button variant="light" onClick={()=>{reply(report._id)}}>Reply</Button>
+                     <Button variant="light" disabled={disbale_close_btn(report)} onClick={()=>{closeReport(report._id)}}>Close</Button>
+                <Button variant="light" onClick={()=>{viewReport(report._id)}}>View</Button>
+                <Button variant="light" disabled={disbale_reply_btn(report)} onClick={()=>{reply(report._id)}}>Reply</Button>
                 </ButtonGroup>
             </Card> 
         </Col>
@@ -130,7 +163,9 @@ export default function Dashboard() {
                             </Card> 
                     </Col>
                     <div className='d-flex row'>
-                    <p className='ps-3 mt-4 me-0 h5'>Filed Report </p>
+                        <div className='ps-3 mt-4 me-0 h5 d-flex align-items-center'>
+                            <p className='m-0'>Filed Report</p>  
+                        </div>
                         {
                             addCards.length === 0 ?
                             <Col lg={4} md={6}>
@@ -158,7 +193,7 @@ export default function Dashboard() {
 
         <MyModal
             show={modalShow}
-            showReply={showReply}
+            showreply={showReply.valueOf()}
             onHide={() => {setModalShow(false)}}
             report={oneReport}
         />

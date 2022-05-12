@@ -8,3 +8,7 @@
     border-radius: 2.5px;
 
 }
+
+.alert-danger {
+    white-space: pre-line;
+}

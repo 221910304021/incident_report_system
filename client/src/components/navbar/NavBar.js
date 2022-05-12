@@ -13,6 +13,10 @@ const NavBar = () => {
     const [modalShow, setModalShow] = useState(false);
     const [menuCollapsed, setMenuCollapsed] = useState(false)
 
+    if (currentUser === null) {
+        return window.location.replace('/login')
+    }
+
     return(
         <>
             {/* <ProSidebar collapsed={menuCollapsed} toggled={false} breakPoint="lg md">
@@ -42,26 +46,28 @@ const NavBar = () => {
                 </div>
             </SidebarFooter>
             </ProSidebar> */}
-            <Navbar bg="light" expand='xl' sticky="top">
+            <Navbar bg="light" expand='lg' sticky="top">
                 <Container fluid>
-                    <Col xl='2' xs='12'> 
+                    <Col xl='2' lg='2' xs='12'> 
                         <div className="d-flex justify-content-between">
                              <Navbar.Brand href="/" className="fs-2"> CICT Incident Report</Navbar.Brand>
                             <Navbar.Toggle className='float-right align-top' hidden={false} aria-controls="offcanvasNavbar" /> 
                         </div>
                     </Col>
-                    <Navbar.Collapse hidden={true} id="collapse" className="justify-content-between fs-5">
-                        <Nav>
-                            <Nav.Link href="/">Home</Nav.Link>
-                            <Nav.Link href="/file-report">File A Report</Nav.Link>
-                            <Nav.Link href="#">Announcements</Nav.Link>
-                            <Nav.Link href="#">Notifications</Nav.Link>
-                        </Nav>
-                        <Nav> 
-                            <Nav.Link href="/profile">My Profile</Nav.Link>
-                            <Nav.Link onClick={()=>{setModalShow(true)}}>Logout</Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
+                    <Col xl='9' lg='9'>
+                        <Navbar.Collapse hidden={true} id="collapse" className="justify-content-between fs-5">
+                            <Nav>
+                                <Nav.Link href="/">Home</Nav.Link>
+                                <Nav.Link href="/file-report">File A Report</Nav.Link>
+                                <Nav.Link href="#">Announcements</Nav.Link>
+                                <Nav.Link href="#">Notifications</Nav.Link>
+                            </Nav>
+                            <Nav> 
+                                <Nav.Link href="/profile">My Profile</Nav.Link>
+                                <Nav.Link onClick={()=>{setModalShow(true)}}>Logout</Nav.Link>
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Col>
                     <Navbar.Offcanvas
                     id="offcanvasNavbar"
                     aria-labelledby="offcanvasNavbarLabel"

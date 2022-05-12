@@ -90,11 +90,10 @@ export default function UploadImage() {
                 getDownloadURL(uploadTask.snapshot.ref)
                 .then(
                     (url)=>{
-                        fire()
                         Axios.put('http://localhost:3001/update-dp', {
                             authID: currentUser.uid,
                             photoUrl: url,
-                        }).then((response) => {console.log(response);})
+                        }).then((response) => {fire()})
                     }
                     )
             }
@@ -119,7 +118,7 @@ export default function UploadImage() {
       </div>
       
       <div className='d-flex flex-row justify-content-end'>
-        <Button variant='outline-secondary' className='w-30 mt-4 me-3 fw-bold' type='button' onClick={()=>window.location.href='/profile'}>Cancel</Button>
+        <Button variant='outline-secondary' className='w-30 mt-4 me-3 fw-bold' type='button' onClick={()=>window.location.reload()}>Cancel</Button>
         <Button variant='success' disabled={loading} className='w-30 mt-4 fw-bold' type='button' onClick={handleSubmit}>Save</Button>
       </div>
     </>

@@ -5,9 +5,11 @@ import UploadImage from './UploadImage'
 import { useAuth } from '../../contexts/AuthContext'
 
 
-export default function AccountView({studentInfo, getFragment}) {
+export default function AccountView({studentInfo, getFragment, parent}) {
   
   const {currentUser} = useAuth()
+
+  console.log(studentInfo);
 
   const [show, setShow] = useState(false);
   const [target, setTarget] = useState(null);
@@ -47,7 +49,12 @@ export default function AccountView({studentInfo, getFragment}) {
           </Overlay>
         </div>
         <div className='d-flex justify-content-between ps-2 pe-2'>
-          <p id='medyo-bold' className='fs-2 m-0'>Account View</p>
+          { 
+          parent === 'profile' ? 
+          <p id='medyo-bold' className='fs-2 m-0'>Account View</p> 
+            : 
+          <p id='medyo-bold' className='fs-2 m-0'>Review Account Information</p> 
+          }
           <Button variant='outline-primary' onClick={popOver}>Edit</Button>
         </div>
         <hr className='mt-3 mb-3'/>

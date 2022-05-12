@@ -1,20 +1,25 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Modal, Button, Card, FormControl } from "react-bootstrap";
-import TextEditor from "../reportfFilingForm/TextEditor";
+import { Modal, Button, Card, Form, Col, ListGroup} from "react-bootstrap";
+import { getApp } from "firebase/app";
+import Axios from 'axios';
+import {getDownloadURL, ref, uploadBytesResumable, getStorage} from 'firebase/storage';
+import {FaImage, FaTimesCircle} from 'react-icons/fa'
+import { formatAMPM, formatZeros } from "../commons/Common";
+import ReplyDisplay from "./ReplyDisplay";
+import BodyDisplay from "./BodyDisplay";
+import EvaluationDisplay from "./EvaluationDisplay";
+import ReplySend from "./ReplySend";
 
 export default function MyModal(props) {
-    const replyRef = useRef()
-    
-    console.log(props.showReply);
-    
+
     if (props.report === undefined) {
         return null
-    }
+    } 
 
     return (
         <Modal
           {...props}
-          size="lg"
+          size="xl"
           aria-labelledby="contained-modal-title-vcenter"
           className="mb-5"
         >
@@ -27,18 +32,11 @@ export default function MyModal(props) {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body >
-                <div className='my-descrip-lg'>
-                    <div dangerouslySetInnerHTML={{ __html: props.report.description }} />
-                </div>
-                <hr className='mt-3 mb-3'/>
-                <Card>
-                  <FormControl as={'textarea'} autoFocus={props.showReply} placeholder='Write a Reply...' ref={replyRef} rows={1}/>
-                </Card>
+            <BodyDisplay primary_description={props.report.primary_description} description={props.report.description}/>
+            <EvaluationDisplay evaluation = {props.report.evaluation} />
+            <ReplyDisplay replies={props.report.replies} showreply = {props.showreply} />
           </Modal.Body>
-           
-          <Modal.Footer>
-            <Button onClick={props.onHide}>Close</Button>
-          </Modal.Footer>
+          <ReplySend show={props.show} sender={props.report.student_info} showreply={props.showreply} isClosed={props.report.isActive} hasReply={props.report.replies.length > 0} isEvaluated={props.report.isEvalueated} report_id = {props.report._id} onHide={props.onHide}/>          
         </Modal>
       );
 

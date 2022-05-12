@@ -14,11 +14,13 @@ function App() {
       <Router>
         <AuthProvider>
           <Routes>
-            <Route exact path='/' element={<Dashboard/>} />
-            <Route path='/file-report' element={<MainForm/>} />
-            <Route path='/signup' element={<Register/>} /> 
-            <Route path='/login' element={<Login/>}/>
-            <Route path='/profile' element={<Profile/>}/>
+            <Route path='/' >
+              <Route index element={<Dashboard/>} />
+              <Route path='file-report' element={<MainForm/>} />
+              <Route path='signup' element={<Register/>} /> 
+              <Route path='login' element={<Login/>}/>
+              <Route path='profile' element={<Profile/>}/>
+            </Route>
           </Routes>
         </AuthProvider> 
       </Router>

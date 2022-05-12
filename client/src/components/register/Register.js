@@ -113,36 +113,33 @@ export default function Register() {
             setconPassError('')
             return setError('Password do not match')
         } 
-
-        try {
-            setError('');
-            setLoading(true)
-            await sign_up(emailRef.current.value, passRef.current.value)
-             Axios.post('http://localhost:3001/save-username', {
+        
+        setError('');
+        setLoading(true)
+        sign_up(emailRef.current.value, passRef.current.value).then(() => {
+            Axios.post('http://localhost:3001/save-username', {
                 username: uNameRef.current.value,
                 email: emailRef.current.value,
-            }).then(async (response) => {
+                }).then(async (response) => {
                 if (response.status === 200){
                     console.log(response);
-                    try {
-                        logout()
+                    logout().then(() => {
                         fire()
-                    } catch (error) {
-                        console.log(error);
-                    }
+                    })
                 }
-            })
-        } catch (error) {
+                }).catch((error) => {
+                    setError(error)
+                })
+        }).catch((error) => {
             if (error.code.includes('auth/email-already-in-use')) {
-                setError('Email is already used. Try to login')
+                setError('The email address is already in use by another account.')
             } else {
                 setError('Error Occured. Unable to create account')
             }
             setLoading(false)
 
-        }
-        setconPassValidity(false)
-
+        })
+            
     }
 
     const matchPassValidation =  (e) => {

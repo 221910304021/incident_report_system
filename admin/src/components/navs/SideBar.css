@@ -1,0 +1,57 @@
+.pro-sidebar{
+    height: 100vh!important;
+}
+.pro-sidebar-header, .pro-sidebar-content, .pro-sidebar-footer {
+    background-color: whitesmoke;
+    color: #1e85e6!important;
+}
+.pro-menu .toggle-btn svg{
+    width: 2em;
+    height: 2em;
+    color: white;
+
+}
+.pro-menu-item{
+    background-color: none;
+
+}
+.pro-icon-wrapper{
+    background-color: transparent!important;
+}
+
+.pro-icon-wrapper .pro-icon {
+    color: #1e85e6;
+}
+.pro-icon svg {
+    width: 2em;
+    height: 2em;
+}
+
+.my-dropdown{
+    max-height: 30vh;
+    overflow: auto;
+}
+
+.dropdown-menu {
+    padding: 0!important;
+    width: max-content!important;
+}
+
+.my-navbar{
+    display: none!important;
+}
+
+.my-body{
+    max-height: 100vh;
+    overflow: auto;
+}
+
+@media only screen and (max-width: 1650px) {
+    .pro-sidebar.mxl{
+        position: fixed;
+        left: -270px;
+    }
+    .my-navbar{
+        display: flex!important;
+    }
+}

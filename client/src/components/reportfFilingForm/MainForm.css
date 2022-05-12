@@ -26,10 +26,9 @@ div.rdw-editor-main{
     border-radius: 5px;
     padding: 5px;
     min-height: 200px;
-
 }
 
-.other-input input {
+.other-input input[type=text], .other-input input[type=number] {
     width: 30%;
     border: 0;
     outline: 0;
@@ -43,12 +42,21 @@ div.rdw-editor-main{
 
 @media only screen and (max-width: 760px) {
     .my-tablist {
-      font-size: small;
+      font-size: medium;
+    }
+    .dropdown-menu.show{
+        max-width: 350px;
+    }
+    .dropdown-item{
+        white-space: normal!important;
+    }
+    #dropdown-basic-button{
+        white-space: normal!important;
     }
 }
 
 @media only screen and (max-width: 500px) {
     .my-tablist {
-      font-size: x-small;
+      font-size: small;
     }
 }

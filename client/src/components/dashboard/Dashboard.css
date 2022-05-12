@@ -10,13 +10,15 @@
 }
 .my-descrip-lg{
     overflow: auto;
-    margin: 10;
     border: 1px solid rgb(204, 204, 204);
     border-radius: 5px;
     padding: 5px;
 }
+.modal{
+    overflow: hidden!important;
+}
 .modal-body{
-    max-height: 740px!important;
+    max-height: 540px!important;
     overflow: auto!important;
 }
 .my-descrip img{
@@ -24,14 +26,65 @@
 }
 
 .active-report {
-    background-color: rgb(73, 190, 73);
+    background-color: rgb(65, 172, 65);
 }
 .closed-report{
-    background-color: rgb(159, 177, 159);
+    background-color: rgb(151, 165, 151);
 
 }
+.pending-report {
+    background-color: #fd7e14;
+}
 
-textarea.form-control{
+.on-process{
+    background-color: #0084ff;
+}
+
+
+.imageContainer{
+    display: flex;
+    position: absolute;
+    top: -15vh;
+    left: 1px;
+    width: fit-content;
+    max-width: 100%;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    padding: 12px;
+}
+
+.images{
+    display: flex;
+    overflow-x: auto;
+}
+
+.modal-editor .my-reply{
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 5px;
+    padding: 5px;
+    height: max-content;
+    overflow: auto;
+}
+
+.modal-editor .my-reply textarea{
+    height: max-content;
+    border: none;
     resize: none;
-    overflow: hidden;
+}
+
+.reply-head {
+    background-color: whitesmoke;
+    position: relative;
+}
+
+.reply-body {
+    position: relative;
+    background-color: #d2e9ff;
+}
+.position-my{
+    position: sticky;
+    left: 45%;
+    width: max-content;
+    bottom: 0;
+    cursor: pointer;
 }

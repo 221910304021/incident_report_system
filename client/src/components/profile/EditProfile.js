@@ -74,7 +74,7 @@ export default function EditProfile({getFragment}) {
                 icon: 'success',
                 title: 'Account has been edited'
               }).then(() => {
-                  window.location.href = '/profile'
+                  window.location.reload()
                   setLoading(false)
               })
         )
@@ -129,7 +129,6 @@ export default function EditProfile({getFragment}) {
             last_name: last_name_ref.current.value,
             year_level: yr_lvl_ref.current.value,
             section: sec_ref.current.value,
-            photoUrl: 'https://firebasestorage.googleapis.com/v0/b/ojt-incident-report-system-dev.appspot.com/o/default-dp%2Fdefault.png?alt=media&token=7c71ba77-d746-49e2-967d-1f2cf0ad7e6a',
             }).then((result) => {
                 if (result) {
                     fire()
@@ -141,7 +140,7 @@ export default function EditProfile({getFragment}) {
     }
 
     const handleCancel = () => {
-        window.location.href = '/profile'
+        window.location.reload()
     }
   return (
     <>

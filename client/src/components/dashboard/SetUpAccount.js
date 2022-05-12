@@ -29,6 +29,7 @@ export default function SetUpAccount(props) {
 
     const handleSubmit = () => {
         if (stud_number_ref.current.value.length < 1){
+            stud_number_ref.current.focus()
             setStudentNumVal(true)
             return setStudentNumErr("Student number is required")
         } else {
@@ -37,12 +38,14 @@ export default function SetUpAccount(props) {
         }
         if (first_name_ref.current.value.length < 1){
             setFnameVal(true)
+            first_name_ref.current.focus()
             return setFnameErr("First name is required")
         } else {
             setFnameVal(false)
             setFnameErr('')
         }
         if (last_name_ref.current.value.length < 1){
+            last_name_ref.current.focus()
             setlnameVal(true)
             return setlnameErr("Student number is required")
         } else {
@@ -50,6 +53,7 @@ export default function SetUpAccount(props) {
             setlnameErr('')
         }
         if (yr_lvl_ref.current.value.length < 1){
+            yr_lvl_ref.current.focus()
             setyrlvlVal(true)
             return setyrlvlErr("Student number is required")
         } else {
@@ -57,6 +61,7 @@ export default function SetUpAccount(props) {
             setyrlvlErr('')
         }
         if (sec_ref.current.value.length < 1){
+            sec_ref.current.focus()
             setsecVal(true)
             return setsecErr("Student number is required")
         } else {
@@ -78,6 +83,14 @@ export default function SetUpAccount(props) {
             });
 
     }
+    const handleKeyDown = (e) => {
+        if (e.keyCode >= 65 && e.keyCode <= 90) {
+            e.preventDefault();
+            return false
+        }
+    }
+
+    const sectionItem = String.fromCharCode(...Array(123).keys()).slice(97).toUpperCase().split('');
 
     return (
         <Modal
@@ -101,7 +114,7 @@ export default function SetUpAccount(props) {
           <Form noValidate>
             <Form.Group className='mb-2' id='stud_number'>  
                 <Form.Label>Student Number*</Form.Label>
-                <Form.Control type='text' ref={stud_number_ref} required isInvalid={stud_number_validity}/>
+                <Form.Control min={0} type='text' onKeyDown={handleKeyDown} maxLength={10} ref={stud_number_ref} required isInvalid={stud_number_validity}/>
                 <Form.Control.Feedback type="invalid">
                     {stud_number_error}
                 </Form.Control.Feedback>
@@ -126,24 +139,42 @@ export default function SetUpAccount(props) {
             </Form.Group>
             <Form.Group className='mb-2' id='yr_lvl'>  
                 <Form.Label>Year Level*</Form.Label>
-                <Form.Control type='text' ref={yr_lvl_ref} required isInvalid={yrlvl_validity}/>
+                <Form.Select ref={yr_lvl_ref} required isInvalid={yrlvl_validity}>
+                    <option value='' key={-1}>Select Year Level</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {yrlvl_error}
                 </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className='mb-2' id='sect'>  
                 <Form.Label>Section*</Form.Label>
-                <Form.Control type='text' ref={sec_ref} required isInvalid={sec_validity} />
+                <Form.Select ref={sec_ref} required isInvalid={sec_validity} >
+                    <option value='' key={-1}>Select Section</option>   
+                    {
+                        sectionItem.map((value) => {
+                            return (
+                                <option key={value} value={value}>{value}</option>
+                            )
+                        })
+                    }
+                </Form.Select>
                 <Form.Control.Feedback type="invalid">
                     {sec_error}
                 </Form.Control.Feedback>
-            </Form.Group>
-            <hr className='mt-4 mb-3'/>
-            <div className='d-flex flex-row justify-content-end'>
-                <Button variant='success' className='w-30 fw-bold' type='button' onClick={handleSubmit}>Save</Button>
-            </div>
-        </Form>  
+            </Form.Group>  
+            </Form>  
+          
           </Modal.Body>
+
+          <Modal.Footer>
+            <div className='d-flex flex-row justify-content-end'>
+                    <Button variant='success' className='w-30 fw-bold' type='button' onClick={handleSubmit}>Save</Button>
+                </div>
+          </Modal.Footer>
         </Modal>
       );
 }

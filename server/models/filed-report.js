@@ -26,13 +26,33 @@ const Filed_Report_Schema = new mongoose.Schema(
             type: String,
             required: true
         },
+        primary_description: {
+            type: Object,
+            required: true
+        },
+        evaluation: {
+            type: Object,
+            required: true,
+            default: {},
+        },
+        replies: {
+            type: Array,
+            required: true,
+            default: [],
+        },
         isActive: {
             type: Boolean,
-            required: true
+            required: true,
+            default: false
+        },
+        isEvalueated: {
+            type: Boolean,
+            required: true,
+            default: false
         }
 
     }
-
+    , {minimize : false}
 )
 
 const Filed_Reports = mongoose.model('filed_report', Filed_Report_Schema);

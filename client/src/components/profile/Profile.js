@@ -24,7 +24,7 @@ export default function Profile() {
             console.log(response);
             if (response.data.length > 0){
                 setStudentInfo(response.data[0])
-                setFragment(<AccountView studentInfo={response.data[0]}  getFragment={getFragment}/>)
+                setFragment(<AccountView studentInfo={response.data[0]}  getFragment={getFragment} parent={'profile'}/>)
             }   
         })
     }, [currentUser])
