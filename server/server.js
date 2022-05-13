@@ -12,6 +12,7 @@ import student_controllers from './controllers/student_controllers.js';
 import evalutor_controller from './controllers/evalutor_controller.js';
 import subject_controllers from './controllers/subject_controllers.js';
 import SubjectOffred from './models/subject_offered.js';
+import socketController from './controllers/socketController.js';
 
 const app = express();
 
@@ -20,11 +21,12 @@ app.use(cors());
 
 const server = http.createServer(app)
 
+socketController.mainSocket(server);
+
+
 mongoose.connect(`mongodb+srv://${process.env.NODE_MONGO_CONFIG_USERNAME}:${process.env.NODE_MONGO_CONFIG_PASSWORD}@cluster0.do96v.mongodb.net/${process.env.NODE_MONGO_CONFIG_DBNAME}?retryWrites=true&w=majority`, {
     useNewURLParser: true,
 });
-
-let watchReports = Filed_Reports.watch();
 
 app.post('/save-student', async (req, res) => {
     student_controllers.save_student(req,res)

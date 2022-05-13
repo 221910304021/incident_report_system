@@ -8,6 +8,8 @@ import './FiledReport.css'
 import AdminReply from './AdminReply'
 import { useAuth } from '../../context/AuthContext'
 import NavBar from '../navs/Navbar'
+import { io } from "socket.io-client";
+
 
 export default function FiledReports() {
   const [reports, setReports] = useState([])
@@ -29,6 +31,8 @@ export default function FiledReports() {
   const [filterPending, setFilterPending] = useState('');
   const [filterSelected, setFilterSelected] = useState('')
   const [active, setActive] = useState(1);
+  const [socket, setSocket] = useState(null)
+
 
   const pageNumbers = []
   const [key, setKey] = useState('all');
@@ -36,29 +40,20 @@ export default function FiledReports() {
   const {currentUser} = useAuth();  
 
   useEffect(() => {
-    if (modalShow) {
-        if (oneReport.isActive && oneReport.replies.length > 0) {
-          Axios.post('http://localhost:3001/get-report', {
-            report_id: oneReport._id,
-            }).then((response) => {
-                setOneReport(response.data[0])
-        })
-      }
-        
-    } else {
-      Axios.get('http://localhost:3001/get-all-reports', {})
-      .then((response) => {
-        if (response.data.length > 0){
-            setReports(response.data)
-        }
+    Axios.get('http://localhost:3001/get-all-reports', {})
+    .then((response)=>{
+      setReports(response.data)
     })
-    }
-})
+  }, [])
+
+  useEffect(() => {
+    setSocket(io("http://localhost:3001"))
+}, [currentUser.uid])
 
   
   if (currentUser === undefined){
     return window.location.replace('/login');
-}
+  }
 
   const getSearchInput = (param) => {
     setCurrentPage(1)
@@ -224,7 +219,7 @@ export default function FiledReports() {
             <Col className='p-0'>
               <SideBar collapsed = {collapsed} getCollapsed={getCollapsed}/>
             </Col>
-            <Col xl={10} className='p-0'>
+            <Col xl={10} className='p-0 my-col'>
               <NavBar collapsed={collapsed.valueOf()} getCollapsed={getCollapsed}/>
               <TopNav getSearchInput={getSearchInput} getFiltered={getFilters}/>
               <div className='container-fluid'>
@@ -282,6 +277,7 @@ export default function FiledReports() {
             showreply={showReply.valueOf()}
             onHide={() => {setModalShow(false)}}
             report={oneReport}
+            socket={socket}
             />
     </>
   )

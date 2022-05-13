@@ -7,6 +7,8 @@ import './Dashboard.css'
 import MyModal from './MyModal'
 import {GoPlus} from 'react-icons/go'
 import SetUpAccount from './SetUpAccount'
+import { io } from "socket.io-client";
+
 
 export default function Dashboard() {
 
@@ -15,6 +17,7 @@ export default function Dashboard() {
     const [modalShow, setModalShow] = useState(false);
     const [showReply, setShowReply] = useState(false)
     const [accountShow, setAccountShow] = useState(false);
+    const [socket, setSocket] = useState(null)
 
     const [reports, setReports] = useState([])
     const [oneReport, setOneReport] = useState()
@@ -33,17 +36,7 @@ export default function Dashboard() {
     }, [])
 
     useEffect(() => {
-        if (modalShow) {
-            if (oneReport.isActive && oneReport.replies.length > 0) {
-                Axios.post('http://localhost:3001/get-report', {
-                    report_id: oneReport._id,
-                    }).then((response) => {
-                        setOneReport(response.data[0])
-                })
-            }
-           
-        } else {
-            Axios.post('http://localhost:3001/get-reports', {
+        Axios.post('http://localhost:3001/get-reports', {
                 student_id: currentUser.uid,
             }).then((response) => {
                 if (response.data.length > 0){
@@ -51,8 +44,12 @@ export default function Dashboard() {
                     setReports(response.data)
                 }
             })
-        }
-    })
+    }, [])
+    
+    useEffect(() => {
+        setSocket(io("http://localhost:3001"))
+    }, [currentUser.uid])
+
 
     const viewReport = (report_id) => {
         Axios.post('http://localhost:3001/get-report', {
@@ -150,7 +147,7 @@ export default function Dashboard() {
     }
   return (
     <>
-    <NavBar/>
+    <NavBar socket={socket}/>
         <Container>
             <Col className='mt-5 mb-5'>
                     <Col lg={3} md={4} xs={7}>
@@ -196,6 +193,7 @@ export default function Dashboard() {
             showreply={showReply.valueOf()}
             onHide={() => {setModalShow(false)}}
             report={oneReport}
+            socket={socket}
         />
        
     </>

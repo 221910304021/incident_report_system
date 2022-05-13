@@ -3,8 +3,6 @@ import { ListGroup } from 'react-bootstrap'
 
 export default function Displaybody(props) {
 
-    console.log(props);
-
   return (
     <>
         <div className='my-descrip-lg shadow-sm'>

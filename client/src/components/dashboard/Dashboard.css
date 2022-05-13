@@ -88,3 +88,10 @@
     bottom: 0;
     cursor: pointer;
 }
+
+.position-sent{
+    position: absolute;
+    left: 42.5%;
+    width: max-content;
+    bottom: 20px;
+}

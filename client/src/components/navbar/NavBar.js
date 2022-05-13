@@ -1,17 +1,27 @@
 import React, { useState, useEffect } from "react";
 import './NavBar.css';
-import { Button, ButtonGroup, Nav, Container, Navbar, Offcanvas, NavDropdown, Row, Col } from "react-bootstrap";
+import { Button, ButtonGroup, Nav, Container, Navbar, Offcanvas, NavDropdown, Row, Col, Badge } from "react-bootstrap";
 import { useAuth } from '../../contexts/AuthContext';
 import {FaSchool, FaUserCircle, FaGem, FaTimes, FaBars} from 'react-icons/fa'
 import {CgLogOut} from 'react-icons/cg'
 import { ProSidebar, Menu, MenuItem, SidebarContent, SidebarHeader, SidebarFooter } from 'react-pro-sidebar';
 import LogOutModal from "./LogOutModal";
+import Swal from 'sweetalert2'
 
-const NavBar = () => {
+const NavBar = (props) => {
 
     const { currentUser, logout} = useAuth();
     const [modalShow, setModalShow] = useState(false);
     const [menuCollapsed, setMenuCollapsed] = useState(false)
+    const [notifCount, setNotifCount] = useState(0)
+
+    useEffect(() => {
+        console.log(2);
+        props.socket?.on(currentUser.uid, ({res}) => {
+            console.log(res);
+            setNotifCount(notifCount+1)
+        })
+      },[props.socket])
 
     if (currentUser === null) {
         return window.location.replace('/login')
@@ -54,13 +64,13 @@ const NavBar = () => {
                             <Navbar.Toggle className='float-right align-top' hidden={false} aria-controls="offcanvasNavbar" /> 
                         </div>
                     </Col>
-                    <Col xl='9' lg='9'>
+                    <Col className="force-nav">
                         <Navbar.Collapse hidden={true} id="collapse" className="justify-content-between fs-5">
                             <Nav>
                                 <Nav.Link href="/">Home</Nav.Link>
                                 <Nav.Link href="/file-report">File A Report</Nav.Link>
                                 <Nav.Link href="#">Announcements</Nav.Link>
-                                <Nav.Link href="#">Notifications</Nav.Link>
+                                <Nav.Link href="#">Notifications <Badge pill bg="danger" hidden={notifCount === 0}>{notifCount}</Badge> </Nav.Link>
                             </Nav>
                             <Nav> 
                                 <Nav.Link href="/profile">My Profile</Nav.Link>

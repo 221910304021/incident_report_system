@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Modal} from "react-bootstrap";
 import DisplayReply from "./DisplayReply";
 import Displaybody from "./Displaybody";
 import Displayevaluation from "./Displayevaluation";
 import SendReply from "./SendReply";
-import { useAuth } from "../../context/AuthContext";
+
 
 export default function AdminReply(props) {
-    const {currentUser} = useAuth()
+    
 
     if (props.report === undefined) {
         return null
@@ -37,10 +37,10 @@ export default function AdminReply(props) {
           <Modal.Body >
               <Displaybody primary_description={props.report.primary_description} description={props.report.description}/>
               <Displayevaluation evaluation= {props.report.evaluation} />
-              <DisplayReply replies={props.report.replies} showreply={props.showreply}/>
+              <DisplayReply socket={props.socket} replies={props.report.replies} showreply={props.showreply}/>
           </Modal.Body>
           
-          <SendReply show={props.show} sender={props.report.evaluation.evaluator_info} isClosed={props.report.isActive} showreply={props.showreply} isEvaluator={JSON.stringify(props.report.evaluation).includes(currentUser.uid) } hasReply={props.report.replies.length > 0} report_id = {props.report._id} onHide={props.onHide}/>
+          <SendReply socket={props.socket} show={props.show} showreply={props.showreply} report={props.report} onHide={props.onHide}/>
           
         </Modal>
       );

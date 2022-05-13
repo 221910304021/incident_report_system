@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { Card, Form, Button } from 'react-bootstrap'
-import {FaImage, FaTimes, FaTimesCircle} from 'react-icons/fa'
+import {FaCheck, FaCheckCircle, FaImage, FaTimes, FaTimesCircle} from 'react-icons/fa'
 import Axios from 'axios';
 import { getApp } from 'firebase/app';
 import {getDownloadURL, ref, uploadBytesResumable, getStorage} from 'firebase/storage';
@@ -14,9 +14,11 @@ export default function ReplySend(props) {
     const [row, setRow] = useState(1)
     const [imgHide, setImgHide] = useState(true)
     const [hide, setHide] = useState(true)
-    const [loading, setLoading] = useState(!props.isClosed ? true : props.isEvaluated ? false : props.hasReply ? false : true )
+    const [sent, setSent] = useState(true)
+    const [loading, setLoading] = useState(!props.report.isActive ? true : props.report.isEvalueated ? false : props.report.replies.length > 0 ? false : true )
 
     const [error, setError] = useState('')
+
 
     const today = new Date();
     let links = [];
@@ -61,7 +63,7 @@ export default function ReplySend(props) {
   
         const imageUpload = new Promise((resolve, reject) => {
           for (let i = 0; i < imageRef.current.files.length; i++) {
-            const storageRef = ref(storage, `/incident-report/${props.report_id}/${today.getFullYear()}${today.getDate()}${today.getMonth()+1}/${imageRef.current.files[i].name}`)
+            const storageRef = ref(storage, `/incident-report/${props.report._id}/${today.getFullYear()}${today.getDate()}${today.getMonth()+1}/${imageRef.current.files[i].name}`)
             const uploadTask = uploadBytesResumable(storageRef, imageRef.current.files[i]);
             console.log(imageRef.current.files.length > 0);
             uploadTask.on('state_changed', 
@@ -128,12 +130,13 @@ export default function ReplySend(props) {
             setHide(true)
             setError('')
         }
+
         setLoading(true)
 
           Axios.post('http://localhost:3001/send-reply', {
-            report_id: props.report_id,
+            report_id:props.report._id,
             reply: {
-              sender: props.sender,
+              sender: props.report.student_info,
               text: replyRef.current.value,
               imageLinks: links,
               date: formatZeros(today),
@@ -142,7 +145,20 @@ export default function ReplySend(props) {
           }).then((res) => {
             handleClose()
             setLoading(false)
+            setSent(false)
+            props.socket.emit('addNotifactionReply', {
+              sender: props.report.student_info,
+              reciever: props.report.evaluation.evaluator_info.authID,
+              title: 'Added new reply',
+              report_type: props.report.incident_type,
+              report_id: props.report._id,
+              date: formatZeros(today),
+              time: formatAMPM(today),
+            })
 
+            setTimeout(() => {
+              setSent(true)
+            }, 2000);
           })
       }    
 
@@ -175,6 +191,9 @@ export default function ReplySend(props) {
               <Button variant="success" disabled={loading} onClick={handleSubmit}>Send</Button>
           </div>
           </Card>
+          </div>
+          <div className='rounded-pill bg-secondary text-white py-2 px-3 position-sent' hidden={sent}>
+              <p className='p-0 m-0'> Reply Sent <FaCheck/> </p>
           </div>
       </>
   )

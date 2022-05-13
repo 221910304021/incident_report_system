@@ -119,7 +119,22 @@ div.rdw-editor-main{
     cursor: pointer;
 }
 
-@media only screen and (max-width: 1023px) {
+.position-sent{
+    position: absolute;
+    left: 42.5%;
+    width: max-content;
+    bottom: 20px;
+}
+
+@media only screen and (max-width: 1440px) {
+    .my-col{
+        flex: 0 0 auto!important;
+        width: 100%!important;
+    }
+}
+
+
+@media only screen and (max-width: 767px) {
     .my-body-reports{
         height: 65vh;
         overflow: auto;

@@ -1,27 +1,28 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap';
 import { FaArrowAltCircleDown } from 'react-icons/fa';
+import { useAuth } from '../../contexts/AuthContext';
+import Axios from 'axios'
 
 export default function ReplyDisplay(props) {
-
+    const {currentUser} = useAuth()
     const divScrollable = useRef(null);
     const [replyCount, setReplyCount] = useState(0)
-    const firstRender = useRef(false);
     const [replies, setReplies] = useState(props.replies)
 
-    useEffect(() => {
-       if (props.showreply) {
-           scrollToBtm()
-       }
-    }, [])
 
     useEffect(() => {
-        if (!firstRender.current){
-            firstRender.current = true
-        } else{
-            setReplyCount(replyCount+1)
-        }
-     }, [replies.length])
+        props.socket?.on(currentUser.uid, ({report_id, sender_id}) => {
+          Axios.post('http://localhost:3001/get-report', {
+            report_id: report_id,
+            }).then((response) => {
+                setReplies(response.data[0].replies)
+                if (sender_id !== currentUser.uid) {
+                    setReplyCount(replyCount+1)
+                }
+            })
+        })
+      },[props.socket])
 
     useEffect(() => {
         setReplies(props.replies)

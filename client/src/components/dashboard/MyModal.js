@@ -12,9 +12,12 @@ import ReplySend from "./ReplySend";
 
 export default function MyModal(props) {
 
+
     if (props.report === undefined) {
         return null
     } 
+
+    
 
     return (
         <Modal
@@ -34,9 +37,9 @@ export default function MyModal(props) {
           <Modal.Body >
             <BodyDisplay primary_description={props.report.primary_description} description={props.report.description}/>
             <EvaluationDisplay evaluation = {props.report.evaluation} />
-            <ReplyDisplay replies={props.report.replies} showreply = {props.showreply} />
+            <ReplyDisplay socket={props.socket} replies={props.report.replies} showreply = {props.showreply} />
           </Modal.Body>
-          <ReplySend show={props.show} sender={props.report.student_info} showreply={props.showreply} isClosed={props.report.isActive} hasReply={props.report.replies.length > 0} isEvaluated={props.report.isEvalueated} report_id = {props.report._id} onHide={props.onHide}/>          
+          <ReplySend socket={props.socket} show={props.show} report={props.report} showreply={props.showreply} onHide={props.onHide}/>          
         </Modal>
       );
 
